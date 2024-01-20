@@ -87,6 +87,26 @@ process.on("uncaughtExceptionMonitor", (e) => {
   console.log(e);
 });
 
+client.on('ready', () => {
+  setInterval(catTask, 20_000)
+  console.log(`Logged in as ${client.user.tag}`);
+});
+
+async function catTask() {
+  const channel = client.channels.cache.get('1037289023854612555');
+  const response = await fetch('https://grantapi.cyclic.app/fun/papkitsu');
+  const json = await response.json();
+  const url = json[0].pap;
+
+  const embed = new EmbedBuilder()
+    .setTitle('Pap Kitsu')
+    .setDescription('Meow')
+    .setColor("#2C2F33")
+    .setImage(url)
+    .setFooter({ text: 'Will send another pap on 20 seconds' });
+  await channel.send({ content: '<@&1136257572060536902>', embeds: [embed] });
+};
+
 client.login(token);
 
 
