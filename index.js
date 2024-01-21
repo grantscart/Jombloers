@@ -102,7 +102,7 @@ async function catTask() {
     .setTitle('Pap Kitsune')
     .setColor("#2C2F33")
     .setImage(url)
-    .setFooter({ text: 'Will send another pap on 20 seconds' });
+    .setFooter({ text: 'Will send another pap on 45 seconds' });
   await channel.send({ embeds: [embed] });
 };
 
