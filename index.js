@@ -88,7 +88,7 @@ process.on("uncaughtExceptionMonitor", (e) => {
 });
 
 client.on('ready', () => {
-  setInterval(catTask, 20_000)
+  setInterval(catTask, 45_000)
   console.log(`Logged in as ${client.user.tag}`);
 });
 
