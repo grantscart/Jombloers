@@ -94,9 +94,9 @@ client.on('ready', () => {
 
 async function catTask() {
   const channel = client.channels.cache.get('837306501914689606');
-  const response = await fetch('https://grantapi.cyclic.app/fun/papkitsu');
+  const response = await fetch('https://grantapi.vercel.app/fun/papkitsu');
   const json = await response.json();
-  const url = json.pap;
+  const url = json.data;
 
   const embed = new EmbedBuilder()
     .setTitle('Pap Kitsune')
