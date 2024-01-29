@@ -87,6 +87,29 @@ process.on("uncaughtExceptionMonitor", (e) => {
   console.log(e);
 });
 
+client.on("guildMemberAdd", member => {
+ const yourServerId = "1190865973637562393";
+ const welcomeChannelId = "1190957987083341884";
+ if (member.guild.id === yourServerId) {
+
+    const welcomeMessage = `Welcome To Danielism ${member}!`;
+
+    const welcomeChannel = client.channels.cache.get(welcomeChannelId);
+
+    if (welcomeChannel) {
+
+      welcomeChannel.send(welcomeMessage);
+
+    } else {
+
+      console.error("Welcome channel not found. Check your configuration.");
+
+    }
+
+  }
+
+});
+
 
 client.login(token);
 
