@@ -103,10 +103,10 @@ client
         } 
 		if(message.content.startsWith(prefix + 'add')) {
             if(!message.member.permissions.has('ManageGuild')) return message.reply('You dont have permissions to run this command.')
-            message.reply('**Hi, Please send msg thats you want 🦊, `Kitsu`**')
+            message.reply('**Mohon Diberitahu apa yang mau diisi**')
             const filter = m => m.author.id === message.author.id;
             message.channel.awaitMessages({ filter, max: 1 }).then(c => {
-                message.reply('**Now please send the response, `😆`**')
+                message.reply('**Sekarang Isi Responnya**')
                 message.channel.awaitMessages({ filter, max: 1 }).then(async(d) => {
                     const id = idgen()
                     message.reply({ embeds: [new EmbedBuilder()
@@ -123,7 +123,7 @@ client
             if(data) {
                 console.log(data)
                 message.reply({ embeds: [new EmbedBuilder()
-                .setTitle('🦊 Auto responsess')
+                .setTitle('Auto responsess')
                 .setColor("#2f3136")
                 .setDescription(data.map((d, index) => `**#${index+ 1}\n>  Message: ${d.msg}\n>  Response: ${d.res} \n>  Id: ${d.makeId}**`).join("\n"))
                 ] })
@@ -131,7 +131,7 @@ client
         }
         if(message.content.startsWith(prefix + 'edit')) {
             if(!message.member.permissions.has('ManageGuild')) return message.reply('You dont have permissions to run this command.')
-            message.reply('Please send document ID (Auto response id)')
+            message.reply('Mohon Kirim document ID (Auto response id)')
             const filter = m => m.author.id === message.author.id;
             message.channel.awaitMessages({ filter, max: 1 }).then(async(c) => {
                 var datas = await autoresSchema.findOne({guildId: message.guild.id, makeId: c.first().content})
