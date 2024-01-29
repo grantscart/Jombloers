@@ -87,24 +87,6 @@ process.on("uncaughtExceptionMonitor", (e) => {
   console.log(e);
 });
 
-client.on('ready', () => {
-  setInterval(catTask, 45_000)
-  console.log(`Logged in as ${client.user.tag}`);
-});
-
-async function catTask() {
-  const channel = client.channels.cache.get('837306501914689606');
-  const response = await fetch('https://grantapi.vercel.app/fun/papkitsu');
-  const json = await response.json();
-  const url = json.data;
-
-  const embed = new EmbedBuilder()
-    .setTitle('Pap Kitsune')
-    .setColor("#2C2F33")
-    .setImage(url)
-    .setFooter({ text: 'Will send another pap on 45 seconds' });
-  await channel.send({ embeds: [embed] });
-};
 
 client.login(token);
 
