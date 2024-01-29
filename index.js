@@ -92,7 +92,7 @@ client.on("guildMemberAdd", member => {
  const welcomeChannelId = "1190957987083341884";
  if (member.guild.id === yourServerId) {
 
-    const welcomeMessage = `Welcome To Danielism ${member}!`;
+    const welcomeMessage = `Welcome To Danielism ${user}!`;
 
     const welcomeChannel = client.channels.cache.get(welcomeChannelId);
 
