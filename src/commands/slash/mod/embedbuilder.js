@@ -1,191 +1,74 @@
-// credit : prtzzz?.
-
-const { SlashCommandBuilder, EmbedBuilder, TextInputBuilder, ModalBuilder, ActionRowBuilder, TextInputStyle, PermissionFlagsBits } = require("discord.js")
-
-
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { EmbedBuilder, PermissionsBitField } = require('discord.js');
 
 module.exports = {
-
     data: new SlashCommandBuilder()
-
-        .setName("embed-builder")
-
-        .setDescription("pokoknya embedbuilder")
-
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
-
-
-
-      run: async (client, interaction) => {
-
-
-
-        let Modal = new ModalBuilder()
-
-            .setCustomId('report')
-
-            .setTitle('Créé ton embed')
-
-
-
-        let question1 = new TextInputBuilder()
-
-            .setCustomId('title')
-
-            .setLabel('Quel titre voulez-vous mettre ?')
-
-            .setRequired(false)
-
-            .setPlaceholder('Ecrit ici... (facultatif)')
-
-            .setStyle(TextInputStyle.Short)
-
-
-
-        let question2 = new TextInputBuilder()
-
-            .setCustomId('description')
-
-            .setLabel("Quelle description voulez-vous mettre ?")
-
-            .setRequired(true)
-
-            .setPlaceholder('Ecrit ici...')
-
-            .setStyle(TextInputStyle.Paragraph)
-
-
-
-        let question3 = new TextInputBuilder()
-
-            .setCustomId('color')
-
-            .setLabel('Quelle couleur voulez-vous mettre ?')
-
-            .setRequired(false)
-
-            .setPlaceholder('Dans ce format : #3dffcc (facultatif)')
-
-            .setStyle(TextInputStyle.Short)
-
-
-
-        let question4 = new TextInputBuilder()
-
-            .setCustomId('footer')
-
-            .setLabel('footer ?')
-
-            .setRequired(false)
-
-            .setPlaceholder('Ecrit ici... (facultatif)')
-
-            .setStyle(TextInputStyle.Short)
-
-
-
-        let question5 = new TextInputBuilder()
-
-            .setCustomId('timestamp')
-
-            .setLabel('Voulez-vous mettre le timestamp ?')
-
-            .setRequired(false)
-
-            .setPlaceholder('oui/non (facultatif)')
-
-            .setStyle(TextInputStyle.Short)
-
-
-
-        let ActionRow1 = new ActionRowBuilder().addComponents(question1);
-
-        let ActionRow2 = new ActionRowBuilder().addComponents(question2);
-
-        let ActionRow3 = new ActionRowBuilder().addComponents(question3);
-
-        let ActionRow4 = new ActionRowBuilder().addComponents(question4);
-
-        let ActionRow5 = new ActionRowBuilder().addComponents(question5);
-
-
-
-        Modal.addComponents(ActionRow1, ActionRow2, ActionRow3, ActionRow4, ActionRow5)
-
-
-
-        await interaction.showModal(Modal)
-
-
-
-        try {
-
-
-
-            let reponse = await interaction.awaitModalSubmit({ time: 300000 })
-
-
-
-            let titre = reponse.fields.getTextInputValue('title')
-
-            let description = reponse.fields.getTextInputValue('description')
-
-            let couleur = reponse.fields.getTextInputValue('color')
-
-            let footer = reponse.fields.getTextInputValue('footer')
-
-            let timestamp = reponse.fields.getTextInputValue('timestamp')
-
-
-
-            const Embed = new EmbedBuilder()
-
-                .setColor("Blue")
-
-                .setDescription(`:grey_exclamation: **Votre embed à été envoyer avec succès !**`)
-
-
-
-            if (!couleur) couleur = "Blue"
-
-            if (!footer) footer = ' '
-
-            if (!titre) titre = ' '
-
-            if (!description) description = ' '
-
-
-
-            let Embed1 = new EmbedBuilder()
-
-                .setColor(`${couleur}`)
-
-                .setTitle(`${titre}`)
-
-                .setDescription(`${description}`)
-
-                .setFooter({ text: `${footer}` })
-
-
-
-            if (reponse.fields.getTextInputValue('timestamp') === 'oui') Embed1.setTimestamp()
-
-            if (!reponse.fields.getTextInputValue('timestamp') === 'oui') return;
-
-
-
-            await interaction.channel.send({ embeds: [Embed1] })
-
-
-
-            await reponse.reply({ embeds: [Embed], ephemeral: true })
-
-
-
-
-
-        } catch (err) { return; }
-
+    .setDMPermission(false)
+    .setName('create-embed')
+    .setDescription('Create an embed')
+    .addStringOption(option => option.setName('title').setDescription('The title of your embed').setRequired(true))
+    .addStringOption(option => option.setName('description').setDescription('The description of your embed').setRequired(true))
+    .addBooleanOption(option => option.setName('timestamp').setDescription('Add a timestamp to your embed').setRequired(true))
+    .addStringOption(option => option.setName('color').setDescription('(HEX) The color of your embed. DEFAULT: white').setMaxLength(6).setMinLength(6).setRequired(false))
+    .addStringOption(option => option.setName('image_link').setDescription('The image of your embed').setRequired(false))
+    .addStringOption(option => option.setName('thumbnail_link').setDescription('The thumbnail of your embed').setRequired(false))
+    .addStringOption(option => option.setName('field-name').setDescription('The field name of your embed (BOTH FIELD OPTIONS ARE REQUIRED IF YOU USE ONE)').setRequired(false))
+    .addStringOption(option => option.setName('field-value').setDescription('The field value of your embed (BOTH FIELD OPTIONS ARE REQUIRED IF YOU USE ONE)').setRequired(false))
+    .addStringOption(option => option.setName('footer').setDescription('The footer of your embed').setRequired(false)),
+
+    run: async (client, interaction) => {
+        
+        const op = interaction.options
+
+        if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) return await interaction.reply({ content: '**You do not have the permissions to use this command**', ephemeral: true})
+
+        const title = op.getString('title');
+        const description = op.getString('description');
+        const timestamp = op.getBoolean('timestamp');
+        const footer = op.getString('footer')
+        const color = op.getString('color');
+        const image = op.getString('image_link');
+        const thumbnail = op.getString('thumbnail_link');
+        let fieldName = op.getString('field-name');
+        let fieldValue = op.getString('field-value');
+        
+    try {
+        const embed = new EmbedBuilder()
+        .setTitle(title)
+        .setDescription(description)
+        .setColor('White')
+        
+        if(fieldName != null || fieldValue != null) {
+            if (fieldName == null) fieldName = 'No input here.';
+            if (fieldValue == null) fieldValue = 'No input here.';
+            embed.addFields(
+                { name: `${fieldName}`, value: `${fieldValue}`}
+                )
+        }
+        
+        if(timestamp == true) {
+            embed.setTimestamp()
+        }
+        if(footer) {
+            embed.setFooter({ text: footer})
+        }
+        if(color) { 
+            embed.setColor(`#${color}`)
+        }
+        if(image) {
+            embed.setImage(`${image}`)
+        }
+        if(thumbnail) {
+            embed.setThumbnail(thumbnail)
+        }
+        await interaction.reply({ content: 'Embed sent successfully', ephemeral: true})
+        await interaction.channel.send({ embeds: [embed] })
+    } catch (err) {
+        const embed = new EmbedBuilder()
+        .setColor('White')
+        .setTitle('Error')
+        .setDescription("There was an error creating your embed")
+        await interaction.reply({ embeds: [embed], ephemeral: true})
     }
-
+        }
 }
