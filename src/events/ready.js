@@ -7,13 +7,6 @@ module.exports = {
   once: true,
   execute: async (client) => {
     
-const baseUrl = `https://raw.githubusercontent.com/inik1n/kitsunee/main`;
-const assetsRaw = await fetch(`${baseUrl}/assets.json`, {
-  headers: {
-    'Authorization': `Bearer ${process.env.GH_PAT}`
-  }
-});
-client.assets = await assetsRaw.json();
     
     const rest = new REST({ version: "10" }).setToken(client.token);
     const activities = [`Developed by Zarco.`, `${client.user.username}`];
